@@ -21,9 +21,19 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
+const grocaCollection = client.db("grocaIteams").collection("iteams");
 const run = async () => {
-  await client.connect();
-  console.log("successful");
+  try {
+    await client.connect();
+    // get data from database
+    app.get("/iteams", async (req, res) => {
+      const query = {};
+      const filter = grocaCollection.find(query);
+      const result = await filter.toArray();
+      res.send(result);
+    });
+  } finally {
+  }
 };
 
 run().catch(console.dir);
