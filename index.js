@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -25,11 +25,36 @@ const grocaCollection = client.db("grocaIteams").collection("iteams");
 const run = async () => {
   try {
     await client.connect();
-    // get data from database
+    // get all data from database
     app.get("/iteams", async (req, res) => {
       const query = {};
       const filter = grocaCollection.find(query);
       const result = await filter.toArray();
+      res.send(result);
+    });
+
+    // get specific data from database
+    app.get("/:id", async (req, res) => {
+      const id = req.params;
+      const query = { _id: ObjectId(id) };
+      const result = await grocaCollection.findOne(query);
+      res.send(result);
+    });
+
+    // update data
+    app.put("/update/:id", async (req, res) => {
+      const id = req.params;
+      const iteam = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: iteam,
+      };
+      const result = await grocaCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
       res.send(result);
     });
   } finally {
