@@ -57,6 +57,13 @@ const run = async () => {
       );
       res.send(result);
     });
+
+    // post data
+    app.post("/addIteam", async (req, res) => {
+      const iteam = req.body;
+      const result = await grocaCollection.insertOne(iteam);
+      res.send(result);
+    });
   } finally {
   }
 };
