@@ -64,6 +64,14 @@ const run = async () => {
       const result = await grocaCollection.insertOne(iteam);
       res.send(result);
     });
+
+    // delete data
+    app.delete("/iteam/:id", async (req, res) => {
+      const id = req.params;
+      const query = { _id: ObjectId(id) };
+      const result = await grocaCollection.deleteOne(query);
+      res.send(result);
+    });
   } finally {
   }
 };
