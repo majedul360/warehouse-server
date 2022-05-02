@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("hellow world");
+  res.send("hellow heroku");
 });
 
 // connect with database
