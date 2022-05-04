@@ -75,6 +75,16 @@ const run = async () => {
       const result = await grocaCollection.deleteOne(query);
       res.send(result);
     });
+
+    // get data by user email
+    app.get("/userIteams/:id", async (req, res) => {
+      const userId = req.params;
+      const filter = grocaCollection.find({
+        email: userId.id,
+      });
+      const result = await filter.toArray();
+      res.send(result);
+    });
   } finally {
   }
 };
