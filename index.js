@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const jwt = require("jsonwebtoken");
 const app = express();
 const port = process.env.PORT || 5000;
 // middle ware
@@ -11,6 +12,8 @@ app.use(express.json());
 // middleware
 app.use(cors());
 app.use(express.json());
+
+// Json web token function
 
 app.get("/", (req, res) => {
   res.send("hellow heroku");
@@ -37,7 +40,7 @@ const run = async () => {
     });
 
     // get specific data from database
-    app.get("/:id", async (req, res) => {
+    app.get("/details/:id", async (req, res) => {
       const id = req.params;
       const query = { _id: ObjectId(id) };
       const result = await grocaCollection.findOne(query);
@@ -76,8 +79,20 @@ const run = async () => {
       res.send(result);
     });
 
+    // Json Web token
+
+    app.post("/get-token", (req, res) => {
+      const user = req.body;
+      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN, {
+        expiresIn: "1d",
+      });
+      res.send({ accessToken });
+    });
+
     // get data by user email
     app.get("/userIteams/:id", async (req, res) => {
+      const tokenHeader = req.headers.authorization;
+      console.log(tokenHeader);
       const userId = req.params;
       const filter = grocaCollection.find({
         email: userId.id,
