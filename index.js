@@ -13,7 +13,22 @@ app.use(express.json());
 app.use(cors());
 app.use(express.json());
 
-// Json web token function
+// Json web token function middletare
+const verifyJWT = (req, res, next) => {
+  const tokenHeader = req.headers.authorization;
+  if (!tokenHeader) {
+    return res.status(401).send({ message: "unauthorized access" });
+  }
+  const token = tokenHeader.split(" ")[1];
+  jwt.verify(token, process.env.ACCESS_TOKEN, (error, decoded) => {
+    if (error) {
+      return res.status(403).send({ message: "forbidden access" });
+    } else {
+      req.decoded = decoded;
+      next();
+    }
+  });
+};
 
 app.get("/", (req, res) => {
   res.send("hellow heroku");
@@ -90,15 +105,19 @@ const run = async () => {
     });
 
     // get data by user email
-    app.get("/userIteams/:id", async (req, res) => {
-      const tokenHeader = req.headers.authorization;
-      console.log(tokenHeader);
+    app.get("/userIteams/:id", verifyJWT, async (req, res) => {
+      const decoded = req.decoded;
+      const verifyEmail = decoded.email;
       const userId = req.params;
-      const filter = grocaCollection.find({
-        email: userId.id,
-      });
-      const result = await filter.toArray();
-      res.send(result);
+      if (verifyEmail === userId.id) {
+        const filter = grocaCollection.find({
+          email: userId.id,
+        });
+        const result = await filter.toArray();
+        res.send(result);
+      } else {
+        res.status(403).send({ message: "forbidden access" });
+      }
     });
   } finally {
   }
