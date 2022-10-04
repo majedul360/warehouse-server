@@ -31,7 +31,7 @@ const verifyJWT = (req, res, next) => {
 };
 
 app.get("/", (req, res) => {
-  res.send("hellow heroku");
+  res.send("hellow vercel");
 });
 
 // connect with database
