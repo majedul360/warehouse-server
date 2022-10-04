@@ -34,7 +34,7 @@ app.get("/", (req, res) => {
   res.send("hellow render");
 });
 
-// connect with database
+// connect with database  sfssf
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.1y2cc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
@@ -129,5 +129,3 @@ run().catch(console.dir);
 app.listen(port, () => {
   console.log("server number", port);
 });
-
-module.exports = app;
