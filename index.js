@@ -129,4 +129,3 @@ run().catch(console.dir);
 app.listen(port, () => {
   console.log("server number", port);
 });
-module.exports = app;
